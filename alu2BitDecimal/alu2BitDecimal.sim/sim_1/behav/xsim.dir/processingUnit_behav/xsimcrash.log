@@ -1,0 +1,51 @@
+Unable to capture context for thread 16224 in process 12868, can not generate back trace
+Unable to capture context for thread 5072 in process 12868, can not generate back trace
+Unable to capture context for thread 14900 in process 12868, can not generate back trace
+Unable to capture context for thread 14692 in process 12868, can not generate back trace
+Unable to capture context for thread 7064 in process 12868, can not generate back trace
+Unable to capture context for thread 6716 in process 12868, can not generate back trace
+Unable to capture context for thread 7464 in process 12868, can not generate back trace
+Unable to capture context for thread 9380 in process 12868, can not generate back trace
+Exception at PC 0x00007FFC8611BB93
+Printing stacktrace...
+
+[0]  [0x00007FFC8611BB93]
+[1]  [0x00007FFC8611BB93]
+[2]  [0x00007FFC8611B4A1]
+[3]  [0x00007FFC8611B459]
+[4]  [0x00007FFC861019FE]
+[5]  [0x00007FFC86100ED1]
+[6]  [0x00007FFC86100D76]
+[7]  [0x00007FFC860A79F6]
+[8]  [0x00007FFC86097AFB]
+[9]  [0x00007FFC861BE90A]
+[10]  [0x00007FFC861D9F87]
+[11]  [0x00007FFC861DA05F]
+[12] (BaseThreadInitThunk+0x17) [0x00007FFD10821F87]
+[13] (RtlUserThreadStart+0x20) [0x00007FFD1192E120]
+Done
+Exception at PC 0x00007FFC85E21A52
+Attemped to write at address 0x00007FFC9B4CABA4
+Printing stacktrace...
+
+[0]  [0x00007FFC85E21A52]
+[1]  [0x00007FFC85E21A52]
+[2]  [0x00007FFC85E21AD4]
+[3]  [0x00007FFC85F63FF7]
+[4]  [0x00007FFC85E49128]
+[5]  [0x00007FFC860FDFB9]
+[6]  [0x00007FFC862CEF23]
+[7]  [0x00007FFC861DB06B]
+[8]  [0x00007FFC861D08AF]
+[9]  [0x00007FFC861D0A32]
+[10] (RtlActivateActivationContextUnsafeFast+0x150) [0x00007FFD11900AC0]
+[11] (LdrShutdownProcess+0x17f) [0x00007FFD11929A9F]
+[12] (RtlExitUserProcess+0xb8) [0x00007FFD119296F8]
+[13] (FatalExit+0xb) [0x00007FFD1082A32B]
+[14] (exit+0x81) [0x00007FFD1183DCB1]
+[15] (initterm_e+0x244) [0x00007FFD1183E2F4]
+[16]  [0x00000000004014CD]
+[17]  [0x000000000040151B]
+[18] (BaseThreadInitThunk+0x17) [0x00007FFD10821F87]
+[19] (RtlUserThreadStart+0x20) [0x00007FFD1192E120]
+Done

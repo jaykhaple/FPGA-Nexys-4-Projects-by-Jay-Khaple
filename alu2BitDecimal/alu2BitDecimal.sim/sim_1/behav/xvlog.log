@@ -1,0 +1,4 @@
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/projects/alu2BitDecimal/alu2BitDecimal.srcs/sources_1/new/alu2BitDecimal.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module processingUnit
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/projects/alu2BitDecimal/alu2BitDecimal.sim/sim_1/behav/glbl.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module glbl
