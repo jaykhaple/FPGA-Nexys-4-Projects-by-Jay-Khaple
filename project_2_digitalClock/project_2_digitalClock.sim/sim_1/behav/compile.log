@@ -1,0 +1,13 @@
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/projects/project_2_digitalClock/project_2_digitalClock.srcs/sources_1/new/digitalClock.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module clkDiv
+INFO: [VRFC 10-311] analyzing module clkDiv1hz
+INFO: [VRFC 10-311] analyzing module refCount
+INFO: [VRFC 10-311] analyzing module countToBcd
+INFO: [VRFC 10-311] analyzing module counterSecMinHrMEETOO
+INFO: [VRFC 10-311] analyzing module countTo6
+INFO: [VRFC 10-311] analyzing module bcdToSeg
+INFO: [VRFC 10-311] analyzing module anodeCntrl
+INFO: [VRFC 10-311] analyzing module digitalClock
+INFO: [VRFC 10-311] analyzing module TOP_digitalClock
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/projects/project_2_digitalClock/project_2_digitalClock.sim/sim_1/behav/glbl.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module glbl
