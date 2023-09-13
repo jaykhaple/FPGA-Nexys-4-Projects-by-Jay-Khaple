@@ -1,0 +1,186 @@
+Copyright 1986-2017 Xilinx, Inc. All Rights Reserved.
+-------------------------------------------------------------------------------------------------------------------------------------------
+| Tool Version : Vivado v.2017.2 (win64) Build 1909853 Thu Jun 15 18:39:09 MDT 2017
+| Date         : Mon Sep  4 14:08:40 2023
+| Host         : LAPTOP-GDQ98PBE running 64-bit major release  (build 9200)
+| Command      : report_methodology -file TOP_vendingMachine_methodology_drc_routed.rpt -rpx TOP_vendingMachine_methodology_drc_routed.rpx
+| Design       : TOP_vendingMachine
+| Device       : xc7a100tcsg324-1
+| Speed File   : -1
+| Design State : Routed
+-------------------------------------------------------------------------------------------------------------------------------------------
+
+Report Methodology
+
+Table of Contents
+-----------------
+1. REPORT SUMMARY
+2. REPORT DETAILS
+
+1. REPORT SUMMARY
+-----------------
+            Netlist: netlist
+          Floorplan: design_1
+      Design limits: <entire design considered>
+             Max violations: <unlimited>
+             Violations found: 30
++-----------+----------+-----------------------------+------------+
+| Rule      | Severity | Description                 | Violations |
++-----------+----------+-----------------------------+------------+
+| TIMING-17 | Warning  | Non-clocked sequential cell | 3          |
+| TIMING-20 | Warning  | Non-clocked latch           | 27         |
++-----------+----------+-----------------------------+------------+
+
+2. REPORT DETAILS
+-----------------
+TIMING-17#1 Warning
+Non-clocked sequential cell  
+The clock pin UUT/dut002/outRefCount_reg[0]/C is not reached by a timing clock
+Related violations: <none>
+
+TIMING-17#2 Warning
+Non-clocked sequential cell  
+The clock pin UUT/dut002/outRefCount_reg[1]/C is not reached by a timing clock
+Related violations: <none>
+
+TIMING-17#3 Warning
+Non-clocked sequential cell  
+The clock pin UUT/dut002/outRefCount_reg[2]/C is not reached by a timing clock
+Related violations: <none>
+
+TIMING-20#1 Warning
+Non-clocked latch  
+The latch UUT/dut003/outAmtBal_reg[0] cannot be properly analyzed as its control pin UUT/dut003/outAmtBal_reg[0]/G is not reached by a timing clock
+Related violations: <none>
+
+TIMING-20#2 Warning
+Non-clocked latch  
+The latch UUT/dut003/outAmtBal_reg[1] cannot be properly analyzed as its control pin UUT/dut003/outAmtBal_reg[1]/G is not reached by a timing clock
+Related violations: <none>
+
+TIMING-20#3 Warning
+Non-clocked latch  
+The latch UUT/dut003/outAmtBal_reg[2] cannot be properly analyzed as its control pin UUT/dut003/outAmtBal_reg[2]/G is not reached by a timing clock
+Related violations: <none>
+
+TIMING-20#4 Warning
+Non-clocked latch  
+The latch UUT/dut003/outAmtBal_reg[3] cannot be properly analyzed as its control pin UUT/dut003/outAmtBal_reg[3]/G is not reached by a timing clock
+Related violations: <none>
+
+TIMING-20#5 Warning
+Non-clocked latch  
+The latch UUT/dut003/outAmtBal_reg[4] cannot be properly analyzed as its control pin UUT/dut003/outAmtBal_reg[4]/G is not reached by a timing clock
+Related violations: <none>
+
+TIMING-20#6 Warning
+Non-clocked latch  
+The latch UUT/dut003/outAmtBal_reg[5] cannot be properly analyzed as its control pin UUT/dut003/outAmtBal_reg[5]/G is not reached by a timing clock
+Related violations: <none>
+
+TIMING-20#7 Warning
+Non-clocked latch  
+The latch UUT/dut003/outAmtToPayCal_reg[1] cannot be properly analyzed as its control pin UUT/dut003/outAmtToPayCal_reg[1]/G is not reached by a timing clock
+Related violations: <none>
+
+TIMING-20#8 Warning
+Non-clocked latch  
+The latch UUT/dut003/outAmtToPayCal_reg[2] cannot be properly analyzed as its control pin UUT/dut003/outAmtToPayCal_reg[2]/G is not reached by a timing clock
+Related violations: <none>
+
+TIMING-20#9 Warning
+Non-clocked latch  
+The latch UUT/dut003/outAmtToPayCal_reg[3] cannot be properly analyzed as its control pin UUT/dut003/outAmtToPayCal_reg[3]/G is not reached by a timing clock
+Related violations: <none>
+
+TIMING-20#10 Warning
+Non-clocked latch  
+The latch UUT/dut003/outAmtToPayCal_reg[4] cannot be properly analyzed as its control pin UUT/dut003/outAmtToPayCal_reg[4]/G is not reached by a timing clock
+Related violations: <none>
+
+TIMING-20#11 Warning
+Non-clocked latch  
+The latch UUT/dut003/outAmtYouArePaying_reg[0] cannot be properly analyzed as its control pin UUT/dut003/outAmtYouArePaying_reg[0]/G is not reached by a timing clock
+Related violations: <none>
+
+TIMING-20#12 Warning
+Non-clocked latch  
+The latch UUT/dut003/outAmtYouArePaying_reg[1] cannot be properly analyzed as its control pin UUT/dut003/outAmtYouArePaying_reg[1]/G is not reached by a timing clock
+Related violations: <none>
+
+TIMING-20#13 Warning
+Non-clocked latch  
+The latch UUT/dut003/outAmtYouArePaying_reg[2] cannot be properly analyzed as its control pin UUT/dut003/outAmtYouArePaying_reg[2]/G is not reached by a timing clock
+Related violations: <none>
+
+TIMING-20#14 Warning
+Non-clocked latch  
+The latch UUT/dut003/outAmtYouArePaying_reg[3] cannot be properly analyzed as its control pin UUT/dut003/outAmtYouArePaying_reg[3]/G is not reached by a timing clock
+Related violations: <none>
+
+TIMING-20#15 Warning
+Non-clocked latch  
+The latch UUT/dut003/outAmtYouArePaying_reg[4] cannot be properly analyzed as its control pin UUT/dut003/outAmtYouArePaying_reg[4]/G is not reached by a timing clock
+Related violations: <none>
+
+TIMING-20#16 Warning
+Non-clocked latch  
+The latch UUT/dut003/outAmtYouArePaying_reg[5] cannot be properly analyzed as its control pin UUT/dut003/outAmtYouArePaying_reg[5]/G is not reached by a timing clock
+Related violations: <none>
+
+TIMING-20#17 Warning
+Non-clocked latch  
+The latch UUT/dut005/outMsg0_reg[0] cannot be properly analyzed as its control pin UUT/dut005/outMsg0_reg[0]/G is not reached by a timing clock
+Related violations: <none>
+
+TIMING-20#18 Warning
+Non-clocked latch  
+The latch UUT/dut005/outMsg0_reg[1] cannot be properly analyzed as its control pin UUT/dut005/outMsg0_reg[1]/G is not reached by a timing clock
+Related violations: <none>
+
+TIMING-20#19 Warning
+Non-clocked latch  
+The latch UUT/dut005/outMsg0_reg[2] cannot be properly analyzed as its control pin UUT/dut005/outMsg0_reg[2]/G is not reached by a timing clock
+Related violations: <none>
+
+TIMING-20#20 Warning
+Non-clocked latch  
+The latch UUT/dut005/outMsg0_reg[3] cannot be properly analyzed as its control pin UUT/dut005/outMsg0_reg[3]/G is not reached by a timing clock
+Related violations: <none>
+
+TIMING-20#21 Warning
+Non-clocked latch  
+The latch UUT/dut005/outMsg1_reg[0] cannot be properly analyzed as its control pin UUT/dut005/outMsg1_reg[0]/G is not reached by a timing clock
+Related violations: <none>
+
+TIMING-20#22 Warning
+Non-clocked latch  
+The latch UUT/dut005/outMsg1_reg[1] cannot be properly analyzed as its control pin UUT/dut005/outMsg1_reg[1]/G is not reached by a timing clock
+Related violations: <none>
+
+TIMING-20#23 Warning
+Non-clocked latch  
+The latch UUT/dut005/outMsg1_reg[2] cannot be properly analyzed as its control pin UUT/dut005/outMsg1_reg[2]/G is not reached by a timing clock
+Related violations: <none>
+
+TIMING-20#24 Warning
+Non-clocked latch  
+The latch UUT/dut005/outMsg4_reg[2]/L7 (in UUT/dut005/outMsg4_reg[2] macro) cannot be properly analyzed as its control pin UUT/dut005/outMsg4_reg[2]/L7/G is not reached by a timing clock
+Related violations: <none>
+
+TIMING-20#25 Warning
+Non-clocked latch  
+The latch UUT/dut005/outMsg5_reg[1] cannot be properly analyzed as its control pin UUT/dut005/outMsg5_reg[1]/G is not reached by a timing clock
+Related violations: <none>
+
+TIMING-20#26 Warning
+Non-clocked latch  
+The latch UUT/dut005/outMsg5_reg[2]/L7 (in UUT/dut005/outMsg5_reg[2] macro) cannot be properly analyzed as its control pin UUT/dut005/outMsg5_reg[2]/L7/G is not reached by a timing clock
+Related violations: <none>
+
+TIMING-20#27 Warning
+Non-clocked latch  
+The latch UUT/dut005/outMsg7_reg[2]/L7 (in UUT/dut005/outMsg7_reg[2] macro) cannot be properly analyzed as its control pin UUT/dut005/outMsg7_reg[2]/L7/G is not reached by a timing clock
+Related violations: <none>
+
+
