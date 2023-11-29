@@ -1,0 +1,529 @@
+`timescale 1ns / 1ps
+
+
+
+module TOP_motor_controller (JA,seg,an,clk,sw,vga_hs_o,vga_vs_o,vga_red_o,vga_green_o,vga_blue_o);
+output [2:0]JA;
+output [6:0]seg;
+output [7:0]an;
+output           vga_hs_o;  
+output           vga_vs_o;  
+output   [3:0]   vga_red_o,vga_green_o,vga_blue_o;
+                 
+input clk;
+input [7:0]sw;
+
+wire [3:0]vga_red_green;
+motor_controller UUT (.pwm_out(JA[0]),.red_green(vga_red_green),.inToDriver(JA[2:1]),.cathode(seg),.anode(an),.clk(clk),.on_off(sw[0]),.dir(sw[1]),.gear(sw[7:2]));
+OUR_VGA          UUT2(
+                        .clk_i(clk),      
+                        .vga_hs_o(vga_hs_o),   
+                        .vga_vs_o(vga_vs_o),   
+                        .vga_red_o(vga_red_o),  
+                        .vga_green_o(vga_green_o),
+                        .vga_blue_o(vga_blue_o), 
+                        .sw(vga_red_green));        
+                      
+endmodule
+
+
+module clock_divider(nclk,clk);
+output reg nclk;
+input clk;
+reg [31:0]cnt=32'd0;
+always@(posedge clk)
+begin
+cnt=cnt+1;
+nclk=cnt[16];
+end
+endmodule
+
+module pwm_controller(pwm_out,red_green,clk,on_off,gear);
+output reg pwm_out=0;
+output reg [3:0]red_green=4'd0;
+input clk,on_off;
+input [5:0]gear;
+reg [7:0]cnt=8'd0;
+always@(posedge clk)
+cnt<=(cnt<255)?(cnt+1):7'd0;
+
+always@(posedge clk)
+begin
+if(on_off==0)
+begin
+    pwm_out<=0;
+    red_green<=4'd0;
+end
+else
+begin
+    case(gear)
+    6'b0000_01: begin
+                    pwm_out     <=(cnt<3)?1:0;
+                    red_green   <=4'd1;
+                end
+    6'b0000_11: begin
+                    pwm_out<=(cnt<20)?1:0;
+                    red_green   <=4'd2;
+                end
+
+    6'b0001_11: begin
+                    pwm_out<=(cnt<30)?1:0;
+                    red_green   <=4'd3;
+                end
+    6'b0011_11: begin
+                    pwm_out<=(cnt<50)?1:0;
+                    red_green   <=4'd4;
+                end
+               
+    6'b0111_11: begin
+                    pwm_out<=(cnt<100)?1:0;
+                    red_green   <=4'd5;
+                end
+    6'b1111_11: begin
+                    pwm_out<=(cnt<180)?1:0;
+                    red_green   <=4'd6;
+                end
+    default:    begin
+                    pwm_out<=0;
+                    red_green   <=4'd0;
+                end
+    endcase
+end
+end
+endmodule
+
+module direction_controller(inToDriver,dir);
+output reg [1:0]inToDriver=2'b0;
+input dir;
+always@(dir)
+begin
+    case(dir)
+        1'b0:inToDriver=2'b10;
+        1'b1:inToDriver=2'b01;
+        default: inToDriver=2'b00;
+    endcase
+end
+endmodule
+///////////////////////////////////////////////////////////////////////////////
+module display_unit(cathode,anode,clk,on_off,gear);
+input clk,on_off;
+input [5:0]gear;
+output [6:0] cathode;
+output [7:0]anode;
+wire nclk;
+wire [3:0]seg0,seg1,seg2;
+wire [3:0]outSegControl;
+wire [2:0]outRefCnt;
+clk_div_for_ref_cnt i1 (.nclk(nclk),.clk(clk));
+refresh_cnt i2 (.outRefCnt(outRefCnt),.inRefCnt(nclk));
+speed_display_generator i3 (seg0,seg1,seg2,on_off,gear);
+segment_controller i4 (.outSegControl(outSegControl),.SegGen1(seg0),.SegGen2(seg1),.SegGen3(seg2),.refCount(outRefCnt));
+bcdToSeg i5 (.bcdToSegOut(cathode),.bcdToSegIn(outSegControl));
+anodeControl i6 (.outAnodeCnt(anode),.inAnodeCnt(outRefCnt));
+endmodule
+
+
+module clk_div_for_ref_cnt(nclk,clk);
+output reg nclk;
+input clk;
+reg [31:0]cnt=32'd0;
+always@(posedge clk)
+begin
+cnt=cnt+1;
+nclk=cnt[16];
+end
+endmodule
+
+module refresh_cnt(outRefCnt,inRefCnt);
+output reg [2:0]outRefCnt=4'd0;
+input inRefCnt;
+always@(posedge inRefCnt)
+outRefCnt=outRefCnt+1;
+endmodule
+
+module speed_display_generator(seg0,seg1,seg2,on_off,gear);
+output reg [3:0]seg0=4'd0,seg1=4'd0,seg2=4'd0;
+input on_off;
+input [5:0]gear;
+always@(*)
+begin
+    if(on_off==0)
+        begin
+            seg0<=4'd0;
+            seg1<=4'd0;
+            seg2<=4'd0;
+        end
+    else
+        begin
+            case(gear)
+                6'b0000_00: begin
+                                seg0<=4'd0;
+                                seg1<=4'd0;
+                                seg2<=4'd0;
+                            end 
+                6'b0000_01: begin
+                                seg0<=4'd0;
+                                seg1<=4'd1;
+                                seg2<=4'd0;
+                             end
+                6'b0000_11: begin
+                                seg0<=4'd5;
+                                seg1<=4'd1;
+                                seg2<=4'd0;
+                            end 
+                6'b0001_11: begin
+                                seg0<=4'd5;
+                                seg1<=4'd2;
+                                seg2<=4'd0;
+                            end
+                6'b0011_11: begin
+                                seg0<=4'd5;
+                                seg1<=4'd4;
+                                seg2<=4'd0;
+                            end 
+                6'b0111_11: begin
+                                seg0<=4'd5;
+                                seg1<=4'd6;
+                                seg2<=4'd0;
+                            end 
+                 6'b1111_11: begin
+                                seg0<=4'd0;
+                                seg1<=4'd0;
+                                seg2<=4'd1;
+                             end
+                 default: begin
+                                seg0<=4'd0;
+                                seg1<=4'd0;
+                                seg2<=4'd0;
+                          end      
+            endcase
+        end
+end
+endmodule
+
+module segment_controller(outSegControl,SegGen1,SegGen2,SegGen3,refCount);
+output reg [3:0]outSegControl;
+input [3:0]SegGen1,SegGen2,SegGen3;
+input [2:0]refCount;
+always@(refCount)
+begin
+    case(refCount)
+    3'd0:outSegControl=SegGen1;
+    3'd1:outSegControl=SegGen2;
+    3'd2:outSegControl=SegGen3;
+    3'd3:outSegControl=4'd12;//d
+    3'd4:outSegControl=4'd10;//e
+    3'd5:outSegControl=4'd10;//e
+    3'd6:outSegControl=4'd11;//p
+    3'd7:outSegControl=4'd5;//5
+    default:outSegControl=4'd13;//-
+    endcase
+end
+endmodule
+
+module bcdToSeg(bcdToSegOut,bcdToSegIn);
+output reg [6:0]bcdToSegOut;
+input [3:0]bcdToSegIn;
+always@(bcdToSegIn)
+begin
+case(bcdToSegIn)
+4'b0000:bcdToSegOut=7'b1000_000;
+4'b0001:bcdToSegOut=7'b1111_001;
+4'b0010:bcdToSegOut=7'b0100_100;
+4'b0011:bcdToSegOut=7'b0110_000;
+4'b0100:bcdToSegOut=7'b0011_001;
+4'b0101:bcdToSegOut=7'b0010_010;
+4'b0110:bcdToSegOut=7'b0000_010;
+4'b0111:bcdToSegOut=7'b1111_000;
+4'b1000:bcdToSegOut=7'b0000_000;
+4'b1001:bcdToSegOut=7'b0010_000;
+4'b1010:bcdToSegOut=7'b0000_110;
+4'b1011:bcdToSegOut=7'b0001_100;
+4'b1100:bcdToSegOut=7'b0100_001;
+4'd1101:bcdToSegOut=7'b0111_111;
+default:bcdToSegOut=7'b1000_000;
+endcase
+end
+endmodule
+
+module anodeControl(outAnodeCnt,inAnodeCnt);
+output reg [7:0]outAnodeCnt;
+input [2:0]inAnodeCnt;
+always@(inAnodeCnt)
+begin
+    case(inAnodeCnt)
+        3'd0:outAnodeCnt=8'b1111_1110;
+        3'd1:outAnodeCnt=8'b1111_1101;
+        3'd2:outAnodeCnt=8'b1111_1011;
+        3'd3:outAnodeCnt=8'b1111_0111;
+        3'd4:outAnodeCnt=8'b1110_1111;
+        3'd5:outAnodeCnt=8'b1101_1111;
+        3'd6:outAnodeCnt=8'b1011_1111;
+                                
+        3'd7:outAnodeCnt=8'b0111_1111;
+        default:outAnodeCnt=8'b1111_1111;
+    endcase
+end
+endmodule
+
+
+///////**********************VGA Controller ***********************************///////
+module OUR_VGA
+#(
+  parameter reg [10:0]  FRAME_WIDTH = 11'd1280,
+                        FRAME_HEIGHT= 11'd1024,
+                        
+                        H_FP        = 11'd48,
+                        H_PW        = 11'd112,
+                        H_MAX       = 11'd1688,
+                        
+                        V_FP        = 11'd1,
+                        V_PW        = 11'd3,
+                        V_MAX       = 11'd1066,
+                        
+    parameter reg       H_POL       = 1,
+                        V_POL       = 1
+/////////////////for 1368x768                        
+//  parameter reg [10:0]  FRAME_WIDTH = 11'd1368,
+//                        FRAME_HEIGHT= 11'd768,
+                                                
+//                        H_FP        = 11'd72,
+//                        H_PW        = 11'd144,
+//                        H_MAX       = 11'd1800,
+                                                
+//                        V_FP        = 11'd1,
+//                        V_PW        = 11'd3,
+//                        V_MAX       = 11'd795,
+                                                
+//    parameter reg       H_POL       = 1,
+//                        V_POL       = 1                        
+                        
+///////////////////////////////                        
+                        
+                        
+            )(
+                clk_i,
+                vga_hs_o,
+                vga_vs_o,
+                vga_red_o,
+                vga_green_o,
+                vga_blue_o,
+                sw);
+
+input            clk_i;
+input    [3:0]   sw;
+output           vga_hs_o;
+output           vga_vs_o;
+output   [3:0]   vga_red_o,
+                 vga_green_o,
+                 vga_blue_o;
+                    
+                    
+wire        pxl_clk;
+wire        active;
+wire        locked;
+
+reg [10:0]  h_cntr_reg      =11'd0;
+reg [10:0]  v_cntr_reg      =11'd0;
+reg [10:0]  h_cntr_reg_dly  =11'd0;
+reg [10:0]  v_cntr_reg_dly  =11'd0;
+
+reg         h_sync_reg      =~H_POL;
+reg         v_sync_reg      =~V_POL;
+
+reg         h_sync_reg_dly  =~H_POL;
+reg         v_sync_reg_dly  =~V_POL;
+
+wire [3:0]  vga_red_cmb;
+wire [3:0]  vga_green_cmb;
+wire [3:0]  vga_blue_cmb;
+
+reg  [3:0]  vga_red_gen     =4'b1111;
+reg  [3:0]  vga_green_gen   =4'b1111;
+reg  [3:0]  vga_blue_gen    =4'b1111;
+
+wire [3:0]  vga_red;
+wire [3:0]  vga_green;
+wire [3:0]  vga_blue;
+
+reg  [3:0]  vga_red_reg     =4'd0;
+reg  [3:0]  vga_green_reg   =4'd0;
+reg  [3:0]  vga_blue_reg    =4'd0;
+       
+wire [3:0]  bg_red; 				
+wire [3:0]  bg_blue;		
+wire [3:0]  bg_green;
+
+reg  [3:0]  bg_red_dly      =4'd0;
+reg  [3:0]  bg_green_dly    =4'd0;
+reg  [3:0]  bg_blue_dly     =4'd0;
+
+       
+ clk_wiz_0 Inst_PxlClkGen
+                     (
+                      // Clock out ports
+                      .clk_out1(pxl_clk),     // output clk_out1
+                      // Status and control signals
+                      .locked(locked),       // output locked
+                     // Clock in ports
+                      .clk_in1(clk_i));      // input clk_in1
+                  // INST_TAG_END ------ End INSTANTIATION Template ---------
+                    
+
+always@(posedge pxl_clk)
+begin
+//Horizontal counter
+            if(h_cntr_reg == (H_MAX-1))
+                h_cntr_reg <= 11'd0;
+            else
+                h_cntr_reg <= h_cntr_reg+1;        
+                   
+
+//Vertical counter
+            if((h_cntr_reg == (H_MAX-1)) && (v_cntr_reg == (V_MAX - 1)))
+                v_cntr_reg <= 11'd0;
+            else if(h_cntr_reg == (H_MAX-1))
+                v_cntr_reg <= v_cntr_reg+1;        
+
+
+//Horizontal sync
+
+            if ((h_cntr_reg >= (H_FP + FRAME_WIDTH -1)) && (h_cntr_reg < (H_FP + FRAME_WIDTH + H_PW-1)))
+                h_sync_reg <= H_POL;
+            else
+                h_sync_reg <= ~H_POL;
+
+
+//Vertical sync 
+
+            if ((v_cntr_reg >= (V_FP + FRAME_HEIGHT - 1)) && (v_cntr_reg < (V_FP + FRAME_HEIGHT + V_PW - 1)))
+                v_sync_reg <= V_POL;
+            else
+                v_sync_reg <= ~V_POL;
+
+end
+
+//assign active = ((h_cntr_reg_dly < FRAME_WIDTH)&& (v_cntr_reg_dly < FRAME_HEIGHT))? 1:0;
+//assign active = (h_cntr_reg_dly < FRAME_WIDTH)? ((v_cntr_reg_dly < FRAME_HEIGHT)?1:0):0;
+/////////////////////////////////////////////////////////////////////////
+reg temp1=0;
+reg temp2=0;
+
+reg temp1_dly;
+reg temp2_dly;
+
+always@(h_cntr_reg_dly,v_cntr_reg_dly )
+begin
+    if(h_cntr_reg_dly < FRAME_WIDTH) temp1<=1;
+    if(v_cntr_reg_dly < FRAME_HEIGHT) temp2<=1;
+end
+
+always@(posedge pxl_clk)
+begin
+    temp1_dly <= temp1;
+    temp2_dly <= temp2;
+end
+
+assign active = (temp1_dly && temp2_dly)? 1:0;
+
+always@(sw)
+begin
+    case(sw)
+    4'd0:begin
+            vga_red_gen      <=4'b1111;
+            vga_green_gen    <=4'b0000;
+            vga_blue_gen     <=4'b0000;
+         end
+    4'd1:begin
+            vga_red_gen      <=4'b0001;
+            vga_green_gen    <=4'b0001;
+            vga_blue_gen     <=4'b0001;
+         end
+    4'd2:begin
+            vga_red_gen      <=4'b0001;
+            vga_green_gen    <=4'b0011;
+            vga_blue_gen     <=4'b0001;
+         end
+    4'd3:begin
+            vga_red_gen      <=4'b0001;
+            vga_green_gen    <=4'b0100;
+            vga_blue_gen     <=4'b0001;
+         end
+    4'd4:begin
+            vga_red_gen      <=4'b0001;
+            vga_green_gen    <=4'b0111;
+            vga_blue_gen     <=4'b0001;
+         end
+    4'd5:begin                         
+            vga_red_gen      <=4'b0000;
+            vga_green_gen    <=4'b0111;
+            vga_blue_gen     <=4'b0000;
+         end                           
+    4'd6:begin                         
+            vga_red_gen      <=4'b0000;
+            vga_green_gen    <=4'b1111;
+            vga_blue_gen     <=4'b0000;
+         end                           
+    default:begin                         
+                vga_red_gen      <=4'b1111;
+                vga_green_gen    <=4'b0000;
+                vga_blue_gen     <=4'b0000;
+            end                           
+    endcase
+    
+    
+    
+//assign vga_red_gen      =4'b1111;
+//assign vga_green_gen    =4'b1111;
+//assign vga_blue_gen     =4'b1111;
+
+end
+assign bg_red       =vga_red_gen;
+assign bg_green     =vga_green_gen;
+assign bg_blue      =vga_blue_gen;
+
+always@(posedge clk_i)
+begin
+    bg_red_dly      <=bg_red;
+    bg_green_dly    <=bg_green;
+    bg_blue_dly     <=bg_blue;
+    
+    h_cntr_reg_dly  <=h_cntr_reg;
+    v_cntr_reg_dly  <=h_cntr_reg;
+    
+end
+
+assign vga_red      =bg_red_dly;
+assign vga_green    =bg_green_dly;
+assign vga_blue     =bg_blue_dly;
+
+//assign vga_red_cmb      =(active && active && active && active) && vga_red;
+//assign vga_green_cmb    =active && vga_green;
+//assign vga_blue_cmb     =active && vga_blue;
+
+assign vga_red_cmb      =(active)? vga_red:4'd0;
+assign vga_green_cmb    =(active)? vga_green:4'd0;
+assign vga_blue_cmb     =(active)? vga_blue:4'd0;
+
+
+//Pipelining 
+always@(posedge pxl_clk)
+begin
+
+            v_sync_reg_dly <= v_sync_reg;   
+            h_sync_reg_dly <= h_sync_reg;   
+            vga_red_reg    <= vga_red_cmb;  
+            vga_green_reg  <= vga_green_cmb;
+            vga_blue_reg   <= vga_blue_cmb; 
+
+end
+
+
+assign vga_hs_o     = h_sync_reg_dly;
+assign vga_vs_o     = v_sync_reg_dly;
+assign vga_red_o    = vga_red_reg;
+assign vga_green_o  = vga_green_reg;
+assign vga_blue_o   = vga_blue_reg;
+
+                   
+endmodule
